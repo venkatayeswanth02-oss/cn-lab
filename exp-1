@@ -1,0 +1,84 @@
+%%bash
+
+# Create the C source file using a here-document
+cat <<'EOF' > network_simulation.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure to represent a computer in the LAN
+typedef struct {
+    char name[20];
+    char ip[16];
+    char subnet[16];
+    char gateway[16];
+    char mac[18];
+} Computer;
+
+// Function to display network devices study summary
+void studyNetworkDevices() {
+    printf("=================================================================\n");
+    printf("                  STUDY OF NETWORK DEVICES                       \n");
+    printf("=================================================================\n");
+    printf("1. NIC (Network Interface Card): Connects a device to the network.\n");
+    printf("2. Hub: Layer 1 device, broadcasts packets to all ports (Obsolete).\n");
+    printf("3. Switch: Layer 2 device, forwards packets based on MAC addresses.\n");
+    printf("4. Router: Layer 3 device, routes traffic between different IP subnets.\n");
+    printf("5. Bridge: Connects and filters traffic between two LAN segments.\n");
+    printf("6. Repeater: Regenerates signals to overcome attenuation over distance.\n");
+    printf("7. Gateway: Translates traffic between different network protocols.\n\n");
+}
+
+// Function to test ping connectivity between two PCs
+void testPing(Computer src, Computer dest) {
+    printf("\nC:\\Users\\%s> ping %s\n\n", src.name, dest.ip);
+    printf("Pinging %s with 32 bytes of data:\n", dest.ip);
+    
+    for (int i = 0; i < 4; i++) {
+        printf("Reply from %s: bytes=32 time<1ms TTL=128\n", dest.ip);
+    }
+    
+    printf("\nPing statistics for %s:\n", dest.ip);
+    printf("    Packets: Sent = 4, Received = 4, Lost = 0 (0%% loss),\n");
+    printf("Approximate round trip times in milli-seconds:\n");
+    printf("    Minimum = 0ms, Maximum = 0ms, Average = 0ms\n");
+}
+
+int main() {
+    // Step 1: Display Study of Network Devices
+    studyNetworkDevices();
+
+    // Step 2: Configure Computers in LAN
+    Computer pcs[3] = {
+        {"PC1", "192.168.1.10", "255.255.255.0", "192.168.1.1", "00:1A:2B:3C:4D:5E"},
+        {"PC2", "192.168.1.11", "255.255.255.0", "192.168.1.1", "00:1A:2B:3C:4D:5F"},
+        {"PC3", "192.168.1.12", "255.255.255.0", "192.168.1.1", "00:1A:2B:3C:4D:60"}
+    };
+
+    // Step 3: Display IP Configuration Table
+    printf("=================================================================\n");
+    printf("                   LAN IP CONFIGURATION TABLE                    \n");
+    printf("=================================================================\n");
+    printf("%-10s %-16s %-16s %-16s\n", "Computer", "IP Address", "Subnet Mask", "Default Gateway");
+    printf("-----------------------------------------------------------------\n");
+    for (int i = 0; i < 3; i++) {
+        printf("%-10s %-16s %-16s %-16s\n", pcs[i].name, pcs[i].ip, pcs[i].subnet, pcs[i].gateway);
+    }
+    printf("-----------------------------------------------------------------\n");
+
+    // Step 4: Simulate Ping Connectivity Tests
+    printf("\n=================================================================\n");
+    printf("                     CONNECTIVITY TESTING                        \n");
+    printf("=================================================================\n");
+    testPing(pcs[0], pcs[1]); // PC1 to PC2
+    testPing(pcs[0], pcs[2]); // PC1 to PC3
+
+    return 0;
+}
+EOF
+
+# Compile the C code
+gcc -o network_simulation network_simulation.c
+
+# Run the compiled executable
+./network_simulation
